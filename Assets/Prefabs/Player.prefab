@@ -5171,5 +5171,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dfcbdeeb42f14440a80b946a3315e38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveForce: 50
+  maxVelocity: 10
+  moveForce: 25
   deathParts: {fileID: 5601014628989631953}

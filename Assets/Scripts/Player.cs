@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     private Inputs playerInputs;
     private Rigidbody rb;
 
+    public float maxVelocity;
     public float moveForce;
     public ParticleSystem deathParts;
 
@@ -32,7 +33,10 @@ public class Player : MonoBehaviour
         Vector2 moveInput = playerInputs.Player.Movement.ReadValue<Vector2>();
         Vector3 moveVect = new Vector3(moveInput.x, 0, moveInput.y);
 
-        rb.AddForce(moveVect * moveForce);
+        if (rb.velocity.magnitude < maxVelocity)
+        {
+            rb.AddForce(moveVect * moveForce);
+        }
 
         if (transform.position.y < -1) // Kill player if they fall off the map
         {
@@ -49,7 +53,7 @@ public class Player : MonoBehaviour
         else if (col.tag == "Goal")
         {
             int buildIndex = SceneManager.GetActiveScene().buildIndex + 1;
-            if (buildIndex > SceneManager.sceneCount)
+            if (buildIndex >= SceneManager.sceneCountInBuildSettings)
             {
                 buildIndex = 0;
             }
