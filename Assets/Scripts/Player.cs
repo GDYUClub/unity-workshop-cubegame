@@ -10,9 +10,6 @@ public class Player : MonoBehaviour
 
     public float maxVelocity;
     public float moveForce;
-    public ParticleSystem deathParts;
-
-    private bool isDead;
 
     // Start is called before the first frame update
     void Start()
@@ -25,11 +22,6 @@ public class Player : MonoBehaviour
     // FixedUpdate is called 50 times per sec
     void FixedUpdate() 
     {
-        if (isDead == true) // Prevent movement when dead
-        {
-            return;
-        }
-
         Vector2 moveInput = playerInputs.Player.Movement.ReadValue<Vector2>();
         Vector3 moveVect = new Vector3(moveInput.x, 0, moveInput.y);
 
@@ -37,45 +29,5 @@ public class Player : MonoBehaviour
         {
             rb.AddForce(moveVect * moveForce);
         }
-
-        if (transform.position.y < -1) // Kill player if they fall off the map
-        {
-            StartCoroutine(Die());
-        }
     }
-
-    private void OnTriggerEnter(Collider col)
-    {
-        if (col.tag == "Enemy")
-        {
-            StartCoroutine(Die());
-        }
-        else if (col.tag == "Goal")
-        {
-            int buildIndex = SceneManager.GetActiveScene().buildIndex + 1;
-            if (buildIndex >= SceneManager.sceneCountInBuildSettings)
-            {
-                buildIndex = 0;
-            }
-            SceneManager.LoadScene(buildIndex);
-        }
-    }
-
-    public IEnumerator Die()
-    {
-        if (isDead == true) // Prevent death when already dead
-        {
-            yield break;
-        }
-
-        isDead = true;
-        GetComponent<MeshRenderer>().enabled = false;
-        rb.constraints = RigidbodyConstraints.FreezeAll;
-        deathParts.Play();
-
-        yield return new WaitForSeconds(2f); // Wait 2 sec
-
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name); // Reload the current scene/level
-    }
-
 }
